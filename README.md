@@ -1,10 +1,10 @@
-# 🛡️ EthosLens - AI Governance Platform
+# 🛡️ NIMEdge - AI Governance Platform
 
 **Enterprise-grade AI safety and compliance platform with real-time harmful content detection and monitoring.**
 
 ## 🚀 Overview
 
-EthosLens is an AI governance platform that detects and blocks harmful content in real-time. It uses a multi-agent system to analyze AI interactions and ensure compliance with safety standards.
+NIMEdge is an AI governance platform that detects and blocks harmful content in real-time. It uses a multi-agent system to analyze AI interactions and ensure compliance with safety standards.
 
 ## ✨ Features
 
@@ -40,8 +40,8 @@ EthosLens is an AI governance platform that detects and blocks harmful content i
 ### Installation
 
 ```bash
-git clone https://github.com/nihalnihalani/EthosLens.git
-cd EthosLens
+git clone https://github.com/nihalnihalani/NIMEdge.git
+cd NIMEdge
 npm install
 ```
 

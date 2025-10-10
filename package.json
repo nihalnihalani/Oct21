@@ -1,12 +1,12 @@
 {
-  "name": "ethoslens-ai-governance",
+  "name": "nimedge-ai-governance",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "EthosLens - Enterprise AI Governance Platform with Real-time Monitoring and Compliance",
+  "description": "NIMEdge - Enterprise AI Governance Platform with Real-time Monitoring and Compliance",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nihalnihalani/EthosLens.git"
+    "url": "https://github.com/nihalnihalani/NIMEdge.git"
   },
   "author": "Nihal Nihalani",
   "license": "MIT",
@@ -25,7 +25,11 @@
     "preview": "vite preview --port 3000"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "chart.js": "^4.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.0",
     "lucide-react": "^0.344.0",
@@ -33,7 +37,8 @@
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
-    "react-force-graph-2d": "^1.29.0"
+    "react-force-graph-2d": "^1.29.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
