@@ -347,7 +347,7 @@ const AuditLogs: React.FC = () => {
             }
           />
         )}
-        </>
+          </>
         )}
       </div>
     </motion.div>
