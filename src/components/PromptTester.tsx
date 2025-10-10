@@ -4,6 +4,7 @@ import { Send, Loader2, AlertTriangle, Clock } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
 import { rateLimiter } from '../utils/rateLimiter';
 import { InputSanitizer } from '../utils/inputSanitizer';
+import { RainbowButton } from './ui/buttons/RainbowButton';
 
 interface PromptTesterProps {
   onSubmit: (prompt: string) => void;
@@ -76,20 +77,20 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6"
+      className="card-premium p-6 mb-6"
     >
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Test LLM Prompt</h3>
+      <h3 className="text-lg font-semibold text-white mb-4">Test LLM Prompt</h3>
       
       {/* Rate Limit Display */}
       <div className="mb-4 flex items-center justify-between text-sm">
         <div className="flex items-center space-x-2">
-          <Clock className="h-4 w-4 text-gray-500" />
-          <span className="text-gray-600">
-            Remaining requests: <strong>{remainingRequests}/10</strong>
+          <Clock className="h-4 w-4 text-gray-400" />
+          <span className="text-gray-300">
+            Remaining requests: <strong className="text-white">{remainingRequests}/10</strong>
           </span>
         </div>
         {remainingRequests <= 3 && (
-          <div className="flex items-center space-x-1 text-orange-600">
+          <div className="flex items-center space-x-1 text-orange-400">
             <AlertTriangle className="h-4 w-4" />
             <span className="text-xs">Rate limit approaching</span>
           </div>
@@ -102,19 +103,19 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
             value={prompt}
             onChange={(e) => handlePromptChange(e.target.value)}
             placeholder="Enter your prompt to test AI governance..."
-            className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
-              error ? 'border-red-300 bg-red-50' : 'border-gray-300'
+            className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none input-premium ${
+              error ? 'border-red-400 bg-red-900/20' : 'border-gray-600'
             }`}
             rows={4}
             disabled={isLoading}
             maxLength={5000}
           />
           <div className="flex justify-between items-center mt-1">
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-400">
               {prompt.length}/5000 characters
             </div>
             {error && (
-              <div className="flex items-center space-x-1 text-red-600 text-xs">
+              <div className="flex items-center space-x-1 text-red-400 text-xs">
                 <AlertTriangle className="h-3 w-3" />
                 <span>{error}</span>
               </div>
@@ -123,16 +124,10 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
         </div>
         
         <div className="flex items-center justify-between">
-          <motion.button
+          <RainbowButton
             type="submit"
             disabled={!prompt.trim() || isLoading || !!error || remainingRequests <= 0}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-              error || remainingRequests <= 0 
-                ? 'bg-gray-400 text-white' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
+            className="w-auto px-6 py-2"
           >
             {isLoading ? (
               <>
@@ -145,10 +140,10 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
                 <span>Send Prompt</span>
               </>
             )}
-          </motion.button>
+          </RainbowButton>
           
           {remainingRequests <= 0 && (
-            <div className="text-xs text-red-600">
+            <div className="text-xs text-red-400">
               Rate limit reached. Please wait before submitting again.
             </div>
           )}
@@ -157,7 +152,7 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
 
       {/* Loading State with Agent Status */}
       {isLoading && (
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+        <div className="mt-6 p-4 glass-dark rounded-lg border border-gray-700/50">
           <LoadingSpinner 
             text="AI Governance Agents Processing..." 
             showAgentStatus={true}
@@ -166,7 +161,7 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
       )}
 
       <div className="mt-6">
-        <h4 className="text-sm font-medium text-gray-900 mb-2">Quick Test Prompts:</h4>
+        <h4 className="text-sm font-medium text-white mb-2">Quick Test Prompts:</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {quickPrompts.map((quickPrompt, index) => (
             <motion.button
@@ -174,7 +169,7 @@ const PromptTester: React.FC<PromptTesterProps> = ({ onSubmit, isLoading }) => {
               onClick={() => handlePromptChange(quickPrompt)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="text-left p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors text-sm text-gray-700 disabled:opacity-50"
+              className="text-left p-3 glass-dark rounded-md hover:bg-gray-800/50 transition-colors text-sm text-gray-300 disabled:opacity-50 border border-gray-700/50"
               disabled={isLoading || remainingRequests <= 0}
             >
               {quickPrompt}

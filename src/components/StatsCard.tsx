@@ -12,30 +12,30 @@ interface StatsCardProps {
 
 const StatsCard: React.FC<StatsCardProps> = ({ title, value, change, icon: Icon, color }) => {
   const colorClasses = {
-    blue: 'text-black',
-    green: 'text-black',
-    red: 'text-black',
-    yellow: 'text-black',
-    purple: 'text-black',
+    blue: 'text-blue-400',
+    green: 'text-green-400',
+    red: 'text-red-400',
+    yellow: 'text-yellow-400',
+    purple: 'text-purple-400',
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -1 }}
-      className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-all duration-200"
+      whileHover={{ y: -2 }}
+      className="card-premium hover-glow p-6 rounded-xl border border-gray-700/50 transition-all duration-200"
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-500 mb-2">{title}</p>
-          <p className="text-3xl font-semibold text-black">{value}</p>
+          <p className="text-sm text-gray-400 mb-2">{title}</p>
+          <p className="text-3xl font-bold text-white">{value}</p>
           {change && (
-            <p className="text-sm text-gray-400 mt-1">{change}</p>
+            <p className="text-sm text-gray-300 mt-1">{change}</p>
           )}
         </div>
-        <div className={`p-2 ${colorClasses[color]}`}>
-          <Icon className="h-5 w-5" />
+        <div className={`p-3 rounded-lg bg-gray-800/50 ${colorClasses[color]}`}>
+          <Icon className="h-6 w-6" />
         </div>
       </div>
     </motion.div>

@@ -377,18 +377,18 @@ const Graph: React.FC = () => {
   }
 
   return (
-    <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white' : 'relative'}`}>
+    <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-gray-900' : 'relative'}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white border border-gray-200 rounded-lg overflow-hidden"
+        className="card-premium rounded-lg overflow-hidden border border-gray-700/50"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700/50">
           <div className="flex items-center space-x-3">
-            <Network className="h-5 w-5 text-black" />
-            <h3 className="text-lg font-semibold text-black">Knowledge Graph</h3>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Network className="h-5 w-5 text-blue-400" />
+            <h3 className="text-lg font-semibold text-white">Knowledge Graph</h3>
+            <div className="flex items-center space-x-2 text-sm text-gray-400">
               <span>{graphData.nodes.length} nodes</span>
               <span>•</span>
               <span>{graphData.links.length} relationships</span>
@@ -399,7 +399,7 @@ const Graph: React.FC = () => {
             {/* Controls toggle */}
             <button
               onClick={() => setShowControls(!showControls)}
-              className="p-1 text-gray-400 hover:text-black transition-colors"
+              className="p-1 text-gray-400 hover:text-white transition-colors"
               title="Toggle info panel"
             >
               {showControls ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -408,7 +408,7 @@ const Graph: React.FC = () => {
             {/* Manual refresh */}
             <button
               onClick={fetchGraphData}
-              className="p-1 text-gray-400 hover:text-black transition-colors"
+              className="p-1 text-gray-400 hover:text-white transition-colors"
               title="Refresh graph"
             >
               <RefreshCw className="h-4 w-4" />
@@ -417,7 +417,7 @@ const Graph: React.FC = () => {
             {/* Fullscreen toggle */}
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-1 text-gray-400 hover:text-black transition-colors"
+              className="p-1 text-gray-400 hover:text-white transition-colors"
               title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             >
               {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}

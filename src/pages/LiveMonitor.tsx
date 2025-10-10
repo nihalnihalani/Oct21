@@ -8,6 +8,7 @@ import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/Toast';
 import EmptyState from '../components/EmptyState';
 import { Activity, RefreshCw } from 'lucide-react';
+import { AuroraText } from '../components/ui/typography/AuroraText';
 
 const LiveMonitor: React.FC = () => {
   const [interactions, setInteractions] = useState<LLMInteraction[]>([]);
@@ -112,22 +113,29 @@ const LiveMonitor: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-8 space-y-8 bg-white min-h-screen"
+      className="p-8 space-y-8 min-h-screen"
     >
-      <div className="flex items-center justify-between border-b border-gray-200 pb-6">
-        <h1 className="text-2xl font-semibold text-black">Live Monitor</h1>
+      <div className="flex items-center justify-between border-b border-gray-700/50 pb-6">
+        <h1 className="text-3xl font-bold text-white">
+          <AuroraText
+            colors={["#ffffff", "#60a5fa", "#3b82f6", "#1d4ed8"]}
+            speed={1.2}
+          >
+            Live Monitor
+          </AuroraText>
+        </h1>
         <div className="flex items-center space-x-4">
           <button
             onClick={handleManualRefresh}
-            className="flex items-center space-x-2 px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 text-sm glass-dark border border-gray-700/50 rounded-lg hover:bg-gray-800/50 transition-colors text-white"
             title="Refresh interactions"
           >
             <RefreshCw className="h-4 w-4" />
             <span>Refresh</span>
           </button>
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-            <span className="text-sm text-gray-600">Manual refresh only</span>
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <span className="text-sm text-gray-300">Manual refresh only</span>
           </div>
         </div>
       </div>

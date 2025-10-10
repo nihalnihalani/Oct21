@@ -10,6 +10,7 @@ import { apiService } from '../api/apiService';
 import EmptyState from '../components/EmptyState';
 import Graph from '../components/Graph';
 import { BarChart3 } from 'lucide-react';
+import { AuroraText } from '../components/ui/typography/AuroraText';
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats>({
@@ -44,13 +45,20 @@ const Dashboard: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-8 space-y-8 bg-white min-h-screen"
+      className="p-8 space-y-8 min-h-screen"
     >
-      <div className="flex items-center justify-between border-b border-gray-200 pb-6">
-        <h1 className="text-2xl font-semibold text-black">Dashboard</h1>
+      <div className="flex items-center justify-between border-b border-gray-700/50 pb-6">
+        <h1 className="text-3xl font-bold text-white">
+          <AuroraText
+            colors={["#ffffff", "#60a5fa", "#3b82f6", "#1d4ed8"]}
+            speed={1.2}
+          >
+            Dashboard
+          </AuroraText>
+        </h1>
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-          <span className="text-sm text-gray-600">System Online</span>
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-sm text-gray-300">System Online</span>
         </div>
       </div>
 

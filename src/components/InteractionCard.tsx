@@ -16,7 +16,7 @@ const InteractionCard: React.FC<InteractionCardProps> = ({ interaction, onAction
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+      className="card-premium p-6 hover-glow transition-all duration-200"
     >
       <InteractionCardHeader interaction={interaction} />
       
