@@ -744,10 +744,13 @@ export class PolicyEnforcerAgent {
       { pattern: /violent\s+revenge/i, severity: 8.0, type: 'revenge_violence' },
       
       // Enhanced violence patterns - CRITICAL
-      { pattern: /how\s+to\s+kill\s+(my|someone|a|the)\s+(father|mother|parent|family|person)/i, severity: 9.8, type: 'murder_instructions' },
+      // Catch-all for "how to kill" queries
+      { pattern: /how\s+to\s+kill/i, severity: 9.5, type: 'killing_instructions' },
+      { pattern: /how\s+to\s+kill\s+(my|someone|a|the)\s+(father|mother|parent|sibling|siblings|brother|sister|family|child|children|friend|person|anyone)/i, severity: 9.8, type: 'murder_instructions' },
+      { pattern: /kill\s+(my|your|their)\s+(father|mother|parent|sibling|siblings|brother|sister|family|child|children|friend|anyone)/i, severity: 9.8, type: 'murder_instructions' },
       { pattern: /step\s*-?\s*by\s*-?\s*step\s+(tutorial|guide|instructions).*kill/i, severity: 9.9, type: 'detailed_murder_guide' },
-      { pattern: /how\s+to\s+(murder|assassinate|eliminate)\s+(someone|a\s+person)/i, severity: 9.7, type: 'murder_instructions' },
-      { pattern: /ways\s+to\s+kill\s+(someone|a\s+person|people)/i, severity: 9.6, type: 'killing_methods' },
+      { pattern: /how\s+to\s+(murder|assassinate|eliminate)\s+(someone|a\s+person|my|your)/i, severity: 9.7, type: 'murder_instructions' },
+      { pattern: /ways\s+to\s+kill\s+(someone|a\s+person|people|my|your)/i, severity: 9.6, type: 'killing_methods' },
       
       // Weapon-related violence
       { pattern: /how\s+to\s+make\s+(poison|deadly\s+weapon|lethal)/i, severity: 9.5, type: 'weapon_creation' },
