@@ -9,6 +9,7 @@ import {
   Users,
   Activity
 } from 'lucide-react';
+import { AuroraText } from './ui/typography/AuroraText';
 
 interface SidebarProps {
   activeTab: string;
@@ -29,14 +30,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
     <motion.div 
       initial={{ x: -300 }}
       animate={{ x: 0 }}
-      className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col"
+      className="w-64 glass-dark border-r border-gray-700/50 h-screen flex flex-col backdrop-blur-xl"
     >
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-gray-700/50">
         <div className="flex items-center space-x-3">
-          <Shield className="h-7 w-7 text-black" />
+          <Shield className="h-7 w-7 text-blue-400" />
           <div>
-            <h1 className="text-lg font-semibold text-black">EthosLens</h1>
-            <p className="text-sm text-gray-500">AI Governance</p>
+            <h1 className="text-lg font-semibold text-white">
+              <AuroraText
+                colors={["#ffffff", "#60a5fa", "#3b82f6", "#1d4ed8"]}
+                speed={1.5}
+              >
+                NIMEdge
+              </AuroraText>
+            </h1>
+            <p className="text-sm text-gray-400">AI Governance</p>
           </div>
         </div>
       </div>
@@ -46,10 +54,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           <motion.button
             key={item.id}
             onClick={() => onTabChange(item.id)}
-            className={`w-full flex items-center space-x-3 px-6 py-2.5 text-left transition-all duration-200 ${
+            className={`w-full flex items-center space-x-3 px-6 py-2.5 text-left transition-all duration-200 hover-lift ${
               activeTab === item.id
-                ? 'bg-black text-white'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-black'
+                ? 'bg-blue-600/20 text-blue-400 border-r-2 border-blue-400'
+                : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
             }`}
             whileHover={{ x: 2 }}
             whileTap={{ scale: 0.98 }}
@@ -60,13 +68,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         ))}
       </nav>
 
-      <div className="p-6 border-t border-gray-200">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+      <div className="p-6 border-t border-gray-700/50">
+        <div className="glass-dark border border-gray-700/50 rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-900">System Status</span>
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-white">System Status</span>
           </div>
-          <p className="text-xs text-gray-500">All agents operational</p>
+          <p className="text-xs text-gray-400">All agents operational</p>
         </div>
       </div>
     </motion.div>
