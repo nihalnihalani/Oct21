@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Download, Filter, Activity } from 'lucide-react';
+import { Search, Download, Filter, Activity, RefreshCw } from 'lucide-react';
 import { apiService } from '../api/apiService';
 import { LLMInteraction, AuditLogEntry } from '../types';
 import { format } from 'date-fns';
 import EmptyState from '../components/EmptyState';
 import { FileText } from 'lucide-react';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const AuditLogs: React.FC = () => {
   const [logs, setLogs] = useState<LLMInteraction[]>([]);
@@ -15,21 +16,48 @@ const AuditLogs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [severityFilter, setSeverityFilter] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      const interactions = await apiService.getInteractions();
-      const agentLogs = await apiService.getAuditLogs();
+  const fetchLogs = async (showRefreshIndicator = false) => {
+    try {
+      if (showRefreshIndicator) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+
+      const [interactions, agentLogs] = await Promise.all([
+        apiService.getInteractions(),
+        apiService.getAuditLogs()
+      ]);
+
       setLogs(interactions);
       setAuditLogs(agentLogs);
       setFilteredLogs(interactions);
-    };
+      
+      console.log('📊 Audit Logs loaded:', { 
+        interactions: interactions.length, 
+        auditLogs: agentLogs.length 
+      });
+    } catch (error) {
+      console.error('Failed to fetch logs:', error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
 
+  useEffect(() => {
     fetchLogs();
-    const interval = setInterval(fetchLogs, 5000);
+    const interval = setInterval(() => fetchLogs(false), 10000); // Auto-refresh every 10 seconds
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleManualRefresh = () => {
+    fetchLogs(true);
+  };
 
   useEffect(() => {
     let filtered = [...logs];
@@ -88,7 +116,14 @@ const AuditLogs: React.FC = () => {
       className="p-6 space-y-6"
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {activeTab === 'interactions' 
+              ? `Showing ${filteredLogs.length} of ${logs.length} interactions`
+              : `Showing ${auditLogs.length} agent logs`}
+          </p>
+        </div>
         <div className="flex items-center space-x-4">
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
@@ -99,7 +134,7 @@ const AuditLogs: React.FC = () => {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Interactions
+              Interactions ({logs.length})
             </button>
             <button
               onClick={() => setActiveTab('agent-logs')}
@@ -109,9 +144,19 @@ const AuditLogs: React.FC = () => {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Agent Logs
+              Agent Logs ({auditLogs.length})
             </button>
           </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -124,6 +169,13 @@ const AuditLogs: React.FC = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <LoadingSpinner />
+            <p className="text-gray-500 mt-4">Loading audit logs...</p>
+          </div>
+        ) : (
+          <>
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -294,6 +346,8 @@ const AuditLogs: React.FC = () => {
                 : 'No agent activity logs found. Agent actions will appear here as the system processes interactions.'
             }
           />
+        )}
+        </>
         )}
       </div>
     </motion.div>

@@ -542,6 +542,31 @@ export class GraphNeo4jService {
     return neo4jService.isConfigured();
   }
 
+  // Clear all data from the Neo4j database
+  async clearAllData(): Promise<void> {
+    const session = neo4jService.getSession();
+    if (!session) {
+      throw new Error('Neo4j not configured');
+    }
+
+    try {
+      console.log('🗑️ Clearing all Neo4j data...');
+      
+      // Delete all nodes and relationships
+      await session.run(`
+        MATCH (n)
+        DETACH DELETE n
+      `);
+      
+      console.log('✅ Neo4j database cleared successfully');
+    } catch (error) {
+      console.error('❌ Error clearing Neo4j data:', error);
+      throw error;
+    } finally {
+      await session.close();
+    }
+  }
+
   // Get dashboard stats using graph queries
   async getDashboardStats(): Promise<DashboardStats> {
     const session = neo4jService.getSession();

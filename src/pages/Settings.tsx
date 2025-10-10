@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, RotateCcw, Shield, Activity, FileText, MessageSquare, CheckCircle } from 'lucide-react';
+import { Save, RotateCcw, Shield, Activity, FileText, MessageSquare, CheckCircle, Trash2, Database } from 'lucide-react';
 import { apiService } from '../api/apiService';
 import { AgentSettings } from '../types';
 import PerplexityStatus from '../components/PerplexityStatus';
@@ -19,6 +19,8 @@ const Settings: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -69,6 +71,25 @@ const Settings: React.FC = () => {
     };
     setSettings(defaultSettings);
     toast.info('Settings Reset', 'All settings restored to defaults');
+  };
+
+  const handleClearDatabase = async () => {
+    if (!apiService.isNeo4jConfigured()) {
+      toast.error('Neo4j Not Configured', 'Neo4j database is not configured');
+      return;
+    }
+
+    setIsClearing(true);
+    try {
+      await apiService.clearAllData();
+      toast.success('Database Cleared', 'All data has been removed from Neo4j');
+      setShowClearConfirm(false);
+    } catch (error) {
+      console.error('Failed to clear database:', error);
+      toast.error('Clear Failed', 'Unable to clear database');
+    } finally {
+      setIsClearing(false);
+    }
   };
 
   const agentConfigs = [
@@ -294,6 +315,74 @@ const Settings: React.FC = () => {
             <p className="text-sm font-medium text-purple-900">Audit Logging</p>
             <p className="text-xs text-purple-700">Complete activity tracking</p>
           </div>
+        </div>
+      </div>
+
+      {/* Database Management */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Database className="h-5 w-5" />
+          Database Management
+        </h2>
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Manage your Neo4j database. Clearing the database will remove all interactions, audit logs, violations, and related data permanently.
+          </p>
+          
+          {!showClearConfirm ? (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowClearConfirm(true)}
+              disabled={!apiService.isNeo4jConfigured()}
+              className="flex items-center space-x-2 px-4 py-2 bg-red-50 border border-red-200 text-red-700 rounded-md hover:bg-red-100 hover:border-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span>Clear Database</span>
+            </motion.button>
+          ) : (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm font-medium text-red-900 mb-3">
+                ⚠️ Are you sure? This action cannot be undone!
+              </p>
+              <div className="flex items-center space-x-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleClearDatabase}
+                  disabled={isClearing}
+                  className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isClearing ? (
+                    <>
+                      <Activity className="h-4 w-4 animate-spin" />
+                      <span>Clearing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4" />
+                      <span>Yes, Clear All Data</span>
+                    </>
+                  )}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowClearConfirm(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </motion.button>
+              </div>
+            </div>
+          )}
+
+          {!apiService.isNeo4jConfigured() && (
+            <p className="text-xs text-orange-600 flex items-center gap-1">
+              <Activity className="h-3 w-3" />
+              Neo4j is not configured. Database operations are unavailable.
+            </p>
+          )}
         </div>
       </div>
     </motion.div>

@@ -354,6 +354,23 @@ export class ApiService {
   isNeo4jConfigured(): boolean {
     return this.useNeo4j;
   }
+
+  // Clear all Neo4j data
+  async clearAllData(): Promise<void> {
+    if (this.useNeo4j) {
+      try {
+        await graphNeo4jDatabaseService.clearAllData();
+        // Reinitialize schema after clearing
+        await graphNeo4jDatabaseService.initializeSchema();
+      } catch (error) {
+        console.error('Failed to clear Neo4j data:', error);
+        throw error;
+      }
+    } else {
+      console.warn('⚠️ Neo4j not configured, cannot clear data');
+      throw new Error('Neo4j not configured');
+    }
+  }
 }
 
 export const apiService = new ApiService();
