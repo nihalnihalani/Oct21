@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Design System */
+:root {
+  --radius: 0.625rem;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+}
+
+.dark {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-size-\[var\(--grid-size\)_var\(--grid-size\)\] {
+    background-size: var(--grid-size) var(--grid-size);
+  }
+  
+  .animate-aurora {
+    animation: var(--animate-aurora);
+  }
+  
+  .input-transparent {
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: rgb(107, 114, 128);
+  }
+  
+  .input-transparent:focus-visible {
+    border-color: rgb(250, 204, 21);
+    outline: none;
+  }
+  
+  .input-transparent:-webkit-autofill,
+  .input-transparent:-webkit-autofill:hover,
+  .input-transparent:-webkit-autofill:focus,
+  .input-transparent:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(10, 10, 10, 0.9) inset !important;
+    -webkit-text-fill-color: white !important;
+    caret-color: white !important;
+  }
+}
+
+/* Aurora Text Animation */
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);
+  }
+  25% {
+    background-position: 50% 100%;
+    transform: rotate(5deg) scale(1.1);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(-3deg) scale(0.95);
+  }
+  75% {
+    background-position: 50% 0%;
+    transform: rotate(3deg) scale(1.05);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);
+  }
+}
+
+/* Rainbow Border Animation */
+@keyframes rainbow {
+  0% { 
+    background-position: 0 0; 
+  }
+  50% { 
+    background-position: 400% 0; 
+  }
+  100% { 
+    background-position: 0 0; 
+  }
+}
+
+/* Glass Morphism Effects */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Card Styles */
+.card-premium {
+  @apply bg-gray-900/80 backdrop-blur-sm border-gray-700;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.card-premium:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-medium;
+  @apply hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply bg-gray-800 text-gray-300 px-6 py-3 rounded-lg font-medium;
+  @apply hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500;
+  @apply transition-all duration-200;
+}
+
+/* Input Styles */
+.input-premium {
+  @apply bg-transparent border-gray-600 text-white placeholder-gray-400;
+  @apply focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20;
+  @apply transition-all duration-200;
+}
+
+.input-premium:focus {
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+}
+
+/* Text Styles */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff, #f3f4f6, #e5e7eb, #d1d5db);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-accent {
+  @apply text-yellow-400;
+}
+
+.text-muted {
+  @apply text-gray-400;
+}
+
+/* Layout Styles */
+.container-premium {
+  @apply max-w-4xl mx-auto px-4;
+}
+
+.section-spacing {
+  @apply py-8 md:py-12 lg:py-16;
+}
+
+/* Hover Effects */
+.hover-lift {
+  @apply transition-transform duration-200;
+}
+
+.hover-lift:hover {
+  @apply -translate-y-1;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-200;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Focus States */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+.focus-ring-dark {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900;
+}
+
