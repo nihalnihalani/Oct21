@@ -61,18 +61,8 @@ export class ApiService {
     const sanitizedPrompt = validation.sanitized!;
 
     // Generate LLM response using OpenAI
-    let llmResult;
-    if (isOpenAIConfigured()) {
-      llmResult = await callOpenAI(sanitizedPrompt);
-    } else {
-      // If OpenAI is not configured, use a simple mock response
-      llmResult = {
-        response: 'I cannot provide a response as the AI service is not properly configured.',
-        source: 'mock',
-        model: 'mock-model',
-        error: 'OpenAI API not configured'
-      };
-    }
+    // Even if not configured, callOpenAI will return a fallback response
+    const llmResult = await callOpenAI(sanitizedPrompt);
     
     const interaction: LLMInteraction = {
       id: Math.random().toString(36).substr(2, 9),
