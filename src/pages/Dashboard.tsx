@@ -11,6 +11,7 @@ import EmptyState from '@/components/EmptyState';
 // import Graph from '@/components/Graph'; // Temporarily disabled for performance
 import { BarChart3 } from 'lucide-react';
 import { AuroraText } from '@/components/ui/typography/AuroraText';
+import { Neo4jDebug } from '@/components/Neo4jDebug';
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats>({
@@ -95,6 +96,9 @@ const Dashboard: React.FC = () => {
         <PerplexityStatus />
         <Neo4jStatus />
       </div>
+
+      {/* Debug panel for Neo4j configuration */}
+      <Neo4jDebug />
 
       {/* Graph temporarily disabled for performance - enable in settings if needed */}
 
