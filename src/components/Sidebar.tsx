@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 colors={["#ffffff", "#60a5fa", "#3b82f6", "#1d4ed8"]}
                 speed={1.5}
               >
-                ClerkLens
+                NIMEdge
               </AuroraText>
             </h1>
             <p className="text-sm text-gray-400">AI Governance</p>

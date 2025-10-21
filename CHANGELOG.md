@@ -1,16 +1,6 @@
-# ClerkLens Changelog
+# NIMEdge Changelog
 
-## Latest Updates (October 21, 2025)
-
-### 🎯 Project Renamed: NIMEdge → ClerkLens
-- Updated all branding throughout the application
-- Changed package name to `clerklens-ai-governance`
-- Updated repository references
-- Modified UI components to display "ClerkLens"
-- Migrated from Vite to Next.js with App Router
-- Integrated Clerk authentication
-
-## Previous Updates (October 10, 2025)
+## Latest Updates (October 10, 2025)
 
 ### 🎯 Project Renamed: EthosLens → NIMEdge
 - Updated all branding throughout the application

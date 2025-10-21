@@ -1,9 +1,9 @@
 {
-  "name": "clerklens-ai-governance",
+  "name": "nimedge-ai-governance",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "ClerkLens - Enterprise AI Governance Platform with Real-time Monitoring and Compliance",
+  "description": "NIMEdge - Enterprise AI Governance Platform with Real-time Monitoring and Compliance",
   "repository": {
     "type": "git",
     "url": "https://github.com/nihalnihalani/NIMEdge.git"
