@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -11,19 +12,20 @@ import {
 } from 'lucide-react';
 import { AuroraText } from './ui/typography/AuroraText';
 
-interface SidebarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
+interface SidebarProps {}
+
+const Sidebar: React.FC<SidebarProps> = () => {
+  const pathname = usePathname();
   const menuItems = [
-    { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
-    { id: 'monitor', icon: Activity, label: 'Live Monitor' },
-    { id: 'logs', icon: FileText, label: 'Audit Logs' },
-    { id: 'violations', icon: AlertTriangle, label: 'Violations' },
-    { id: 'agents', icon: Users, label: 'Agents' },
-    { id: 'settings', icon: Settings, label: 'Settings' }
+    { href: '/dashboard', icon: BarChart3, label: 'Dashboard' },
+    { href: '/live-monitor', icon: Activity, label: 'Live Monitor' },
+    { href: '/audit-logs', icon: FileText, label: 'Audit Logs' },
+    { href: '/violations', icon: AlertTriangle, label: 'Violations' },
+    { href: '/agents', icon: Users, label: 'Agents' },
+    { href: '/settings', icon: Settings, label: 'Settings' }
   ];
 
   return (
@@ -50,22 +52,25 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       </div>
 
       <nav className="flex-1 mt-6">
-        {menuItems.map((item) => (
-          <motion.button
-            key={item.id}
-            onClick={() => onTabChange(item.id)}
-            className={`w-full flex items-center space-x-3 px-6 py-2.5 text-left transition-all duration-200 hover-lift ${
-              activeTab === item.id
-                ? 'bg-blue-600/20 text-blue-400 border-r-2 border-blue-400'
-                : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
-            }`}
-            whileHover={{ x: 2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <item.icon className="h-4 w-4" />
-            <span className="font-medium text-sm">{item.label}</span>
-          </motion.button>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link key={item.href} href={item.href}>
+              <motion.div
+                className={`w-full flex items-center space-x-3 px-6 py-2.5 text-left transition-all duration-200 hover-lift ${
+                  isActive
+                    ? 'bg-blue-600/20 text-blue-400 border-r-2 border-blue-400'
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+                whileHover={{ x: 2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <item.icon className="h-4 w-4" />
+                <span className="font-medium text-sm">{item.label}</span>
+              </motion.div>
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="p-6 border-t border-gray-700/50">

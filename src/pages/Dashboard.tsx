@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Shield, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
-import StatsCard from '../components/StatsCard';
-import ViolationChart from '../components/ViolationChart';
-import { DashboardStats } from '../types';
-import PerplexityStatus from '../components/PerplexityStatus';
-import Neo4jStatus from '../components/Neo4jStatus';
-import { apiService } from '../api/apiService';
-import EmptyState from '../components/EmptyState';
-import Graph from '../components/Graph';
+import StatsCard from '@/components/StatsCard';
+import ViolationChart from '@/components/ViolationChart';
+import { DashboardStats } from '@/types';
+import PerplexityStatus from '@/components/PerplexityStatus';
+import Neo4jStatus from '@/components/Neo4jStatus';
+import { apiService } from '@/api/apiService';
+import EmptyState from '@/components/EmptyState';
+// import Graph from '@/components/Graph'; // Temporarily disabled for performance
 import { BarChart3 } from 'lucide-react';
-import { AuroraText } from '../components/ui/typography/AuroraText';
+import { AuroraText } from '@/components/ui/typography/AuroraText';
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats>({
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchStats();
-    const interval = setInterval(fetchStats, 5000); // Refresh every 5 seconds
+    const interval = setInterval(fetchStats, 30000); // Refresh every 30 seconds (improved performance)
 
     return () => clearInterval(interval);
   }, []);
@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
         <Neo4jStatus />
       </div>
 
-      <Graph />
+      {/* Graph temporarily disabled for performance - enable in settings if needed */}
 
       {stats.topViolations.length > 0 && (
         <div>

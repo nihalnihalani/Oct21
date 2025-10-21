@@ -26,7 +26,7 @@ interface LLMResult {
 }
 
 export async function callOpenAI(prompt: string): Promise<LLMResult> {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY as string | undefined;
   
   if (!apiKey) {
     console.warn('OPENAI_API_KEY not found, using fallback');
@@ -100,5 +100,5 @@ export async function callOpenAI(prompt: string): Promise<LLMResult> {
 }
 
 export function isOpenAIConfigured(): boolean {
-  return !!import.meta.env.VITE_OPENAI_API_KEY;
+  return !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 }

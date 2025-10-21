@@ -1,13 +1,23 @@
 import { LLMInteraction, DashboardStats, AgentSettings, AuditLogEntry, FeedbackEntry } from '../types';
 import { agents } from '../agents';
 import { graphNeo4jDatabaseService } from '../services/graphNeo4jService';
-import { mockApi } from './mockApi';
 import { rateLimiter } from '../utils/rateLimiter';
 import { InputSanitizer } from '../utils/inputSanitizer';
 import { callOpenAI, isOpenAIConfigured } from '../lib/openaiAgent';
 
 export class ApiService {
   private useNeo4j: boolean;
+  private interactionsMemory: LLMInteraction[] = [];
+  private auditLogsMemory: AuditLogEntry[] = [];
+  private feedbackMemory: FeedbackEntry[] = [];
+  private settingsMemory: AgentSettings = {
+    policyEnforcer: { enabled: true },
+    verifier: { enabled: true },
+    auditLogger: { enabled: true },
+    responseAgent: { enabled: true },
+    feedbackAgent: { enabled: true },
+    severityThreshold: 7.0,
+  };
 
   constructor() {
     this.useNeo4j = graphNeo4jDatabaseService.isConfigured();
@@ -18,7 +28,7 @@ export class ApiService {
     });
     
     if (!this.useNeo4j) {
-      console.warn('⚠️ Neo4j not configured, falling back to mock API');
+      console.warn('⚠️ Neo4j not configured, using in-memory storage (no mock).');
     } else {
       console.log('✅ Neo4j configured, initializing schema...');
       // Initialize Neo4j schema
@@ -149,20 +159,18 @@ export class ApiService {
         const errorMessage = error instanceof Error ? error.message : String(error);
         const errorStack = error instanceof Error ? error.stack : '';
         console.error('Error details:', errorMessage, errorStack);
-        // Don't fallback to mock API - throw the error so we can see what's wrong
-        throw new Error(`Neo4j save failed: ${errorMessage}`);
+        // Do not fallback to mock; keep in-memory instead
+        this.interactionsMemory.push(interaction);
       }
     } else {
-      console.warn('⚠️ Neo4j not configured, using mock API');
-      return await mockApi.processPrompt(prompt);
+      console.warn('⚠️ Neo4j not configured, storing interaction in-memory');
+      this.interactionsMemory.push(interaction);
     }
 
     return interaction;
   }
 
   private async logAllAgentActions(interaction: LLMInteraction): Promise<void> {
-    if (!this.useNeo4j) return;
-
     try {
       for (const action of interaction.agentActions) {
         const logEntry: AuditLogEntry = {
@@ -171,12 +179,16 @@ export class ApiService {
           agentName: action.agentName,
           action: action.action,
           interactionId: interaction.id,
-          details: action.details
+          details: action.details,
         };
-        await graphNeo4jDatabaseService.saveAuditLog(logEntry);
+        if (this.useNeo4j) {
+          await graphNeo4jDatabaseService.saveAuditLog(logEntry);
+        } else {
+          this.auditLogsMemory.push(logEntry);
+        }
       }
     } catch (error) {
-      console.error('Failed to log agent actions to Neo4j:', error);
+      console.error('Failed to log agent actions:', error);
     }
   }
 
@@ -191,11 +203,11 @@ export class ApiService {
         console.error('❌ Failed to fetch from Neo4j, using mock API:', error);
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error('Error details:', errorMessage);
-        return await mockApi.getInteractions();
+        return this.interactionsMemory.slice().reverse();
       }
     } else {
-      console.warn('⚠️ Neo4j not configured, using mock API for getInteractions');
-      return await mockApi.getInteractions();
+      console.warn('⚠️ Neo4j not configured, using in-memory interactions');
+      return this.interactionsMemory.slice().reverse();
     }
   }
 
@@ -204,11 +216,11 @@ export class ApiService {
       try {
         return await graphNeo4jDatabaseService.getDashboardStats();
       } catch (error) {
-        console.error('Failed to fetch stats from Neo4j, using mock API:', error);
-        return await mockApi.getDashboardStats();
+        console.error('Failed to fetch stats from Neo4j:', error);
+        return this.computeStatsFromMemory();
       }
     }
-    return await mockApi.getDashboardStats();
+    return this.computeStatsFromMemory();
   }
 
   async getAuditLogs(): Promise<AuditLogEntry[]> {
@@ -216,11 +228,11 @@ export class ApiService {
       try {
         return await graphNeo4jDatabaseService.getAuditLogs();
       } catch (error) {
-        console.error('Failed to fetch audit logs from Neo4j, using mock API:', error);
-        return await mockApi.getAuditLogs();
+        console.error('Failed to fetch audit logs from Neo4j:', error);
+        return this.auditLogsMemory.slice().reverse();
       }
     }
-    return await mockApi.getAuditLogs();
+    return this.auditLogsMemory.slice().reverse();
   }
 
   async getFeedbackEntries(): Promise<FeedbackEntry[]> {
@@ -228,11 +240,11 @@ export class ApiService {
       try {
         return await graphNeo4jDatabaseService.getFeedback();
       } catch (error) {
-        console.error('Failed to fetch feedback from Neo4j, using mock API:', error);
-        return await mockApi.getFeedbackEntries();
+        console.error('Failed to fetch feedback from Neo4j:', error);
+        return this.feedbackMemory.slice().reverse();
       }
     }
-    return await mockApi.getFeedbackEntries();
+    return this.feedbackMemory.slice().reverse();
   }
 
   async getSettings(): Promise<AgentSettings> {
@@ -240,11 +252,11 @@ export class ApiService {
       try {
         return await graphNeo4jDatabaseService.getSettings();
       } catch (error) {
-        console.error('Failed to fetch settings from Neo4j, using mock API:', error);
-        return await mockApi.getSettings();
+        console.error('Failed to fetch settings from Neo4j:', error);
+        return this.settingsMemory;
       }
     }
-    return await mockApi.getSettings();
+    return this.settingsMemory;
   }
 
   async updateSettings(newSettings: AgentSettings): Promise<void> {
@@ -252,12 +264,11 @@ export class ApiService {
       try {
         await graphNeo4jDatabaseService.saveSettings(newSettings);
       } catch (error) {
-        console.error('Failed to save settings to Neo4j, using mock API:', error);
-        await mockApi.updateSettings(newSettings);
-        return;
+        console.error('Failed to save settings to Neo4j:', error);
+        this.settingsMemory = { ...newSettings };
       }
     } else {
-      await mockApi.updateSettings(newSettings);
+      this.settingsMemory = { ...newSettings };
     }
     
     // Update agent enabled states
@@ -294,11 +305,20 @@ export class ApiService {
           });
         }
       } catch (error) {
-        console.error('Failed to save feedback to Neo4j, using mock API:', error);
-        await mockApi.submitFeedback(interactionId, rating, comment);
+        console.error('Failed to save feedback to Neo4j:', error);
+        this.feedbackMemory.push(feedback);
       }
     } else {
-      await mockApi.submitFeedback(interactionId, rating, comment);
+      this.feedbackMemory.push(feedback);
+      // Update interaction in memory
+      const interaction = this.interactionsMemory.find(i => i.id === interactionId);
+      if (interaction) {
+        interaction.userFeedback = {
+          rating: rating === 'flag' ? 'report' : rating,
+          comment,
+          timestamp: new Date(),
+        };
+      }
     }
   }
 
@@ -349,6 +369,44 @@ export class ApiService {
       }
     }
     return { nodes: [], links: [] };
+  }
+
+  private computeStatsFromMemory(): DashboardStats {
+    const total = this.interactionsMemory.length;
+    const flagged = this.interactionsMemory.filter(i => i.status === 'blocked').length;
+    const severitySum = this.interactionsMemory.reduce((sum, i) => {
+      const map: Record<string, number> = { low: 1, medium: 2, high: 3, critical: 4 };
+      return sum + (map[i.severity] || 0);
+    }, 0);
+
+    const violationCounts = this.interactionsMemory.reduce((counts, interaction) => {
+      interaction.violations.forEach(v => {
+        counts[v.type] = (counts[v.type] || 0) + 1;
+      });
+      return counts;
+    }, {} as Record<string, number>);
+
+    const topViolations = Object.entries(violationCounts)
+      .map(([type, count]) => ({ type, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    const agentActionCounts = this.auditLogsMemory.reduce((counts, log) => {
+      counts[log.agentName] = (counts[log.agentName] || 0) + 1;
+      return counts;
+    }, {} as Record<string, number>);
+
+    const agentActivity = Object.entries(agentActionCounts)
+      .map(([agent, actions]) => ({ agent, actions }))
+      .sort((a, b) => b.actions - a.actions);
+
+    return {
+      totalInteractions: total,
+      flaggedInteractions: flagged,
+      averageSeverity: total > 0 ? severitySum / total : 0,
+      topViolations,
+      agentActivity,
+    };
   }
 
   isNeo4jConfigured(): boolean {

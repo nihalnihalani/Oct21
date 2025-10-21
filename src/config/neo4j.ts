@@ -10,9 +10,9 @@ class Neo4jService {
 
   private initializeDriver() {
     try {
-      const uri = import.meta.env.VITE_NEO4J_URI;
-      const username = import.meta.env.VITE_NEO4J_USERNAME;
-      const password = import.meta.env.VITE_NEO4J_PASSWORD;
+      const uri = process.env.NEXT_PUBLIC_NEO4J_URI as string | undefined;
+      const username = process.env.NEXT_PUBLIC_NEO4J_USERNAME as string | undefined;
+      const password = process.env.NEXT_PUBLIC_NEO4J_PASSWORD as string | undefined;
 
       console.log('🔧 Neo4j initialization:', {
         uri: uri ? `${uri.substring(0, 20)}...` : 'NOT SET',
@@ -39,7 +39,7 @@ class Neo4jService {
     if (!this.driver || !this.isConnected) {
       return null;
     }
-    return this.driver.session({ database: import.meta.env.VITE_NEO4J_DATABASE });
+    return this.driver.session({ database: process.env.NEXT_PUBLIC_NEO4J_DATABASE });
   }
 
   async testConnection(): Promise<boolean> {
@@ -59,10 +59,10 @@ class Neo4jService {
 
   isConfigured(): boolean {
     const configured = !!(
-      import.meta.env.VITE_NEO4J_URI &&
-      import.meta.env.VITE_NEO4J_USERNAME &&
-      import.meta.env.VITE_NEO4J_PASSWORD &&
-      import.meta.env.VITE_NEO4J_DATABASE
+      process.env.NEXT_PUBLIC_NEO4J_URI &&
+      process.env.NEXT_PUBLIC_NEO4J_USERNAME &&
+      process.env.NEXT_PUBLIC_NEO4J_PASSWORD &&
+      process.env.NEXT_PUBLIC_NEO4J_DATABASE
     );
     
     console.log('🔍 Neo4j isConfigured():', {

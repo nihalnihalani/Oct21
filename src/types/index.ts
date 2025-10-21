@@ -14,7 +14,7 @@ export interface LLMInteraction {
 }
 
 export interface Violation {
-  type: 'pii' | 'hallucination' | 'bias' | 'misinformation' | 'hate_speech' | 'compliance' | 'gdpr' | 'fisma' | 'eu_ai_act' | 'dsa' | 'nis2' | 'iso_42001' | 'ieee_ethics' | 'violence';
+  type: 'pii' | 'hallucination' | 'bias' | 'misinformation' | 'hate_speech' | 'compliance' | 'gdpr' | 'fisma' | 'eu_ai_act' | 'dsa' | 'nis2' | 'iso_42001' | 'ieee_ethics' | 'violence' | 'prompt_injection';
   description: string;
   severity: number; // 0-10 scale
   confidence: number;

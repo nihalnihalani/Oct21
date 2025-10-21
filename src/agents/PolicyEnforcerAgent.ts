@@ -57,6 +57,37 @@ export class PolicyEnforcerAgent {
     const outputText = interaction.output.toLowerCase();
     const combinedText = `${inputText} ${outputText}`;
 
+    // Prompt Injection Detection (inspired by real-world rules)
+    const injectionSignals = [
+      /ignore\s+(previous|prior|all)\s+instructions/i,
+      /disregard\s+(the\s+)?(rules|system|safety)/i,
+      /(you\s+are\s+now|act\s+as)\s+(a|an)?\s*(developer|system|admin|root)/i,
+      /(reveal|print|show)\s+(the\s+)?(system\s+prompt|hidden\s+instructions)/i,
+      /(bypass|override|disable)\s+(safety|guardrails|filters|content\s+policy)/i,
+      /(respond\s+verbatim|repeat\s+back)\s+(everything|the\s+prompt)/i,
+      /\{\{.*?\}\}/i, // template injection markers
+      /BEGIN\s+SYSTEM\s+PROMPT|END\s+SYSTEM\s+PROMPT/i,
+      /\b(base64|hex)\b\s+(encode|encoded|decoding|decode)\b/i,
+    ];
+
+    const injectionMatches = injectionSignals.filter((rx) => rx.test(combinedText));
+    if (injectionMatches.length > 0) {
+      violations.push({
+        type: 'prompt_injection',
+        description: 'Prompt injection attempt detected',
+        severity: 8.8,
+        confidence: 0.9,
+        reason: 'Detected instructions attempting to override or bypass system rules',
+        regulatoryFramework: 'Safety Policies',
+        complianceLevel: 'high',
+        remediationSteps: [
+          'Refuse to follow meta-instructions that override system policies',
+          'Sanitize input; ignore unsafe directives',
+          'Respond with safe alternative guidance',
+        ],
+      });
+    }
+
     // Regulatory Framework Compliance Checks
     violations.push(...this.checkGDPRCompliance(combinedText));
     violations.push(...this.checkFISMACompliance(combinedText));
