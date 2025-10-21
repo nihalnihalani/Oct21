@@ -117,13 +117,13 @@ const Neo4jStatus: React.FC<Neo4jStatusProps> = ({ onConfigureClick }) => {
           <ol className="text-sm text-yellow-700 mt-1 ml-4 list-decimal">
             <li>Create a Neo4j Aura instance at <a href="https://console.neo4j.io" target="_blank" rel="noopener noreferrer" className="underline">Neo4j Console</a></li>
             <li>Get your connection details from the instance</li>
-            <li>Add the following to your .env file:</li>
+            <li>Add the following to your .env.local file:</li>
           </ol>
           <div className="mt-2 p-2 bg-yellow-200 rounded text-xs font-mono">
-            <div>VITE_NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io</div>
-            <div>VITE_NEO4J_USERNAME=your_username</div>
-            <div>VITE_NEO4J_PASSWORD=your_password</div>
-            <div>VITE_NEO4J_DATABASE=your_database</div>
+            <div>NEXT_PUBLIC_NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io</div>
+            <div>NEXT_PUBLIC_NEO4J_USERNAME=your_username</div>
+            <div>NEXT_PUBLIC_NEO4J_PASSWORD=your_password</div>
+            <div>NEXT_PUBLIC_NEO4J_DATABASE=your_database</div>
           </div>
           <p className="text-sm text-yellow-700 mt-2">
             4. Restart the development server
