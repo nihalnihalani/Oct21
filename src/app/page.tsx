@@ -10,8 +10,8 @@ export default function HomePage() {
     return (
       <main className="min-h-screen grid place-items-center p-8">
         <div className="text-center max-w-2xl">
-          <h1 className="text-4xl font-bold mb-6 text-white">EthosLens</h1>
-          <div className="bg-yellow-500/10 border border-yellow-500/50 rounded-lg p-6 text-left">
+        <h1 className="text-4xl font-bold mb-6 text-white">ClerkLens</h1>
+        <div className="bg-yellow-500/10 border border-yellow-500/50 rounded-lg p-6 text-left">
             <h2 className="text-xl font-semibold text-yellow-400 mb-3">⚠️ Setup Required</h2>
             <p className="text-gray-300 mb-4">Clerk authentication is not configured. Please set up your environment variables:</p>
             <ol className="list-decimal list-inside space-y-2 text-gray-300 text-sm mb-4">
@@ -38,7 +38,7 @@ CLERK_SECRET_KEY=sk_test_...`}
   return (
     <main className="min-h-screen grid place-items-center p-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="text-center max-w-xl">
-        <h1 className="text-4xl font-bold mb-6 text-white">EthosLens</h1>
+        <h1 className="text-4xl font-bold mb-6 text-white">ClerkLens</h1>
         <p className="text-gray-400 mb-8">AI Governance Platform</p>
         <SignedOut>
           <div className="mx-auto flex flex-col items-center gap-6">

@@ -1,10 +1,10 @@
-# 🛡️ NIMEdge - AI Governance Platform
+# 🛡️ ClerkLens - AI Governance Platform
 
 **Enterprise-grade AI safety and compliance platform with real-time harmful content detection and monitoring.**
 
 ## 🚀 Overview
 
-NIMEdge is an AI governance platform that detects and blocks harmful content in real-time. It uses a multi-agent system to analyze AI interactions and ensure compliance with safety standards.
+ClerkLens is an AI governance platform that detects and blocks harmful content in real-time. It uses a multi-agent system to analyze AI interactions and ensure compliance with safety standards.
 
 ## ✨ Features
 
